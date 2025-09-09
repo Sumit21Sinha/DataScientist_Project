@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+
 def clean_dataset(df, name):
     df = df.drop(df.columns[1:24], axis=1)
     if df.columns[-1].startswith("Unnamed"):
@@ -10,28 +11,34 @@ def clean_dataset(df, name):
     df = df.dropna(how="all", subset=df.columns[1:])
     print(f"\n{name} dataset after cleaning:\n", df.head())
     return df
-current_gdp=pd.read_csv("Current_GDP.csv", sep=",", on_bad_lines="skip")
+
+current_gdp = pd.read_csv("Current_GDP.csv", sep=",", on_bad_lines="skip")
 inflation = pd.read_csv("Inflation.csv", sep=",", on_bad_lines="skip")
-unemployment=pd.read_csv("Unemployment.csv", sep=",", on_bad_lines="skip")
-population=pd.read_csv("Population.csv", sep=",", on_bad_lines="skip")
-growth_gdp=pd.read_csv("GDP_growth.csv", sep=",", on_bad_lines="skip")
+unemployment = pd.read_csv("Unemployment.csv", sep=",", on_bad_lines="skip")
+population = pd.read_csv("Population.csv", sep=",", on_bad_lines="skip")
+growth_gdp = pd.read_csv("GDP_growth.csv", sep=",", on_bad_lines="skip")
+
 print(growth_gdp.info())
 print(inflation.columns)
 print(current_gdp.isnull().sum())
-current_gdp=clean_dataset(current_gdp, "Current GDP")
-inflation=clean_dataset(inflation, "Inflation")
-unemployment=clean_dataset(unemployment, "Unemployment")
-population=clean_dataset(population, "Population")
-growth_gdp=clean_dataset(growth_gdp, "GDP Growth")
-current_gdp=current_gdp.melt(id_vars=["Country Name"], var_name="Year", value_name="Current GDP")
-inflation=inflation.melt(id_vars=["Country Name"], var_name="Year", value_name="Inflation")
-unemployment=unemployment.melt(id_vars=["Country Name"], var_name="Year", value_name="Unemployment")
-population=population.melt(id_vars=["Country Name"], var_name="Year", value_name="Population")
-growth_gdp=growth_gdp.melt(id_vars=["Country Name"], var_name="Year", value_name="GDP Growth")
-final_df=current_gdp.merge(inflation, on=["Country Name", "Year"], how="inner")
-final_df=final_df.merge(unemployment, on=["Country Name", "Year"], how="inner")
-final_df=final_df.merge(population, on=["Country Name", "Year"], how="inner")
-final_df=final_df.merge(growth_gdp, on=["Country Name", "Year"], how="inner")
+
+current_gdp = clean_dataset(current_gdp, "Current GDP")
+inflation = clean_dataset(inflation, "Inflation")
+unemployment = clean_dataset(unemployment, "Unemployment")
+population = clean_dataset(population, "Population")
+growth_gdp = clean_dataset(growth_gdp, "GDP Growth")
+
+current_gdp = current_gdp.melt(id_vars=["Country Name"], var_name="Year", value_name="Current GDP")
+inflation = inflation.melt(id_vars=["Country Name"], var_name="Year", value_name="Inflation")
+unemployment = unemployment.melt(id_vars=["Country Name"], var_name="Year", value_name="Unemployment")
+population = population.melt(id_vars=["Country Name"], var_name="Year", value_name="Population")
+growth_gdp = growth_gdp.melt(id_vars=["Country Name"], var_name="Year", value_name="GDP Growth")
+
+final_df = current_gdp.merge(inflation, on=["Country Name", "Year"], how="inner")
+final_df = final_df.merge(unemployment, on=["Country Name", "Year"], how="inner")
+final_df = final_df.merge(population, on=["Country Name", "Year"], how="inner")
+final_df = final_df.merge(growth_gdp, on=["Country Name", "Year"], how="inner")
+
 print("\nFinal merged dataset:\n", final_df.head())
 final_df["Year"] = final_df["Year"].astype(int)
 print(final_df.info())
