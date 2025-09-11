@@ -77,8 +77,8 @@ plt.xlabel("Year"); plt.ylabel("Unemployment Rate")
 plt.legend()
 plt.show()
 
-sns.histplot(final_df["Inflation"], bins=30, kde=True, color="blue")
-plt.title("Distribution of Inflation")
+sns.histplot(final_df[(final_df["Inflation"] >= -20) & (final_df["Inflation"] <= 30)]["Inflation"], bins=30, kde=True, color="blue")
+plt.title("Distribution of Inflation (–20% to 30%)")
 plt.show()
 
 sns.scatterplot(x="Population", y="Current GDP", data=final_df, alpha=0.5)
