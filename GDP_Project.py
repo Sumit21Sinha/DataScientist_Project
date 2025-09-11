@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 def clean_dataset(df, name):
     df = df.drop(df.columns[1:24], axis=1)
@@ -42,3 +43,51 @@ final_df = final_df.merge(growth_gdp, on=["Country Name", "Year"], how="inner")
 print("\nFinal merged dataset:\n", final_df.head())
 final_df["Year"] = final_df["Year"].astype(int)
 print(final_df.info())
+print(final_df)
+
+sns.heatmap(final_df[["Current GDP", "Inflation", "Unemployment", "Population", "GDP Growth"]].corr(),
+            annot=True, cmap="coolwarm", fmt=".2f")
+plt.title("Correlation between Economic Indicators")
+plt.show()
+
+countries = ["India", "United States", "China", "Japan", "Germany", "Pakistan"]
+for country in countries:
+    countryData = final_df[final_df["Country Name"] == country]
+    plt.plot(countryData["Year"], countryData["Current GDP"]/1e12, label=country)
+plt.title("GDP Trends for Selected Countries")
+plt.xlabel("Year"); plt.ylabel("GDP (Trillions USD)")
+plt.legend()
+plt.show()
+
+countries = ["India", "United States", "China", "Japan", "Germany", "Pakistan"]
+for country in countries:
+    countryData = final_df[final_df["Country Name"] == country]
+    plt.plot(countryData["Year"], countryData["Inflation"], label=country)
+plt.title("Inflation Trends for Selected Countries")
+plt.xlabel("Year"); plt.ylabel("Inflation Rate")
+plt.legend()
+plt.show()
+
+countries = ["India", "United States", "China", "Japan", "Germany", "Pakistan"]
+for country in countries:
+    countryData = final_df[final_df["Country Name"] == country]
+    plt.plot(countryData["Year"], countryData["Unemployment"], label=country)
+plt.title("Unemployment Trends for Selected Countries")
+plt.xlabel("Year"); plt.ylabel("Unemployment Rate")
+plt.legend()
+plt.show()
+
+sns.histplot(final_df["Inflation"], bins=30, kde=True, color="blue")
+plt.title("Distribution of Inflation")
+plt.show()
+
+sns.scatterplot(x="Population", y="Current GDP", data=final_df, alpha=0.5)
+plt.title("GDP vs Population")
+plt.xscale("log")
+plt.yscale("log")
+plt.show()
+
+sns.boxplot(x="Year", y="Unemployment", data=final_df[final_df["Year"] >= 2000])
+plt.xticks(rotation=90)
+plt.title("Unemployment Distribution (2000 onwards)")
+plt.show()
